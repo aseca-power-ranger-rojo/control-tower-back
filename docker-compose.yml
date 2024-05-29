@@ -35,6 +35,24 @@ services:
     networks:
       - app-network
 
+  master:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./src/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://master:8089
+    networks:
+      - app-network
+
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./src/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+    networks:
+      - app-network
+
 volumes:
   db:
 
