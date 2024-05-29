@@ -1,5 +1,5 @@
 services:
-  server:
+  control_tower_service:
     build: .
     container_name: control_tower_service
     restart: always
@@ -8,10 +8,12 @@ services:
     env_file:
       - .env
     depends_on:
-      db:
+      db_control_tower_service:
         condition: service_healthy
+    networks:
+      - app-network
 
-  db:
+  db_control_tower_service:
     image: postgres:alpine
     container_name: db_control_tower_service
     restart: always
@@ -27,9 +29,15 @@ services:
       - .env
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 1s
-      timeout: 1s
-      retries: 15
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - app-network
 
 volumes:
   db:
+
+networks:
+  app-network:
+    external: true
