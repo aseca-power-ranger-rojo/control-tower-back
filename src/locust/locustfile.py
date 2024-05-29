@@ -12,7 +12,7 @@ class UserBehavior(TaskSet):
             "orderId": order_id
         }
 
-        response = self.client.post("/", json=create_order_dto)
+        response = self.client.post("/api/orders", json=create_order_dto)
 
         if response.status_code == 201:
             print(f"Order created successfully with orderId: {order_id}")
@@ -21,11 +21,11 @@ class UserBehavior(TaskSet):
 
     @task(1)
     def order_status(self):
-        order_id = "id"
+        order_id = str(uuid.uuid4())
         step = "PICKING"
         status = "IN_PROGRESS"
 
-        response = self.client.patch(f"/{order_id}/{step}/{status}")
+        response = self.client.patch(f"/api/orders/{order_id}/{step}/{status}")
 
         if response.status_code == 200:
             print(f"Order status updated successfully for orderId: {order_id}")
