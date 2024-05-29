@@ -1,4 +1,4 @@
-import { PrismaClient, Status } from "@prisma/client";
+import { Order, PrismaClient, Status } from "@prisma/client";
 import { CreateOrderDTO, GetOrderDTO } from "../dto";
 
 export class OrdersRepository {
@@ -22,18 +22,15 @@ export class OrdersRepository {
         return orders.map(order => new GetOrderDTO(order));
     }
 
-    async createOrder(data: CreateOrderDTO): Promise<{orderId: string}> {
+    async createOrder(data: CreateOrderDTO): Promise<Order> {
         return await this.db.order.create({
             data: {
                 ...data,
             },
-            select: {
-                orderId: true,
-            }
         });
     }
 
-    async updateOrder(orderId: string, data: {pickingId?: string, pickingStatus?: Status, deliveryId?: string, deliveryStatus?: Status}) {
+    async updateOrder(orderId: string, data: {pickingId?: string, pickingStatus?: Status, deliveryId?: string, deliveryStatus?: Status}): Promise<Order> {
         return await this.db.order.update({
             where: {
                 orderId: orderId
