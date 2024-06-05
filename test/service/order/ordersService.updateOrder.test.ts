@@ -18,9 +18,11 @@ describe('OrdersService.updateOrder', () => {
         const orderId = "1";
         const step = Steps.DELIVERY;
         const status = Status.COMPLETED;
-        const mockOrder = { id: "2", orderId: "1", deliveryStatus: Status.COMPLETED } as Order;
+        const mockOrder = { id: "2", orderId: "1", deliveryStatus: Status.IN_PROGRESS } as Order;
+        const mockUpdatedOrder = { id: "2", orderId: "1", deliveryStatus: Status.COMPLETED } as Order;
 
-        jest.spyOn(repo, 'updateOrder').mockResolvedValue(mockOrder);
+        jest.spyOn(repo, 'getOrder').mockResolvedValue(mockOrder)
+        jest.spyOn(repo, 'updateOrder').mockResolvedValue(mockUpdatedOrder);
 
         const result = await service.updateOrder(orderId, step, status);
 
@@ -33,12 +35,14 @@ describe('OrdersService.updateOrder', () => {
         const orderId = "1";
         const step = Steps.PICKING;
         const status = Status.COMPLETED;
-        const mockOrder = {
+        const mockOrder = { id: "2", orderId: "1", pickingStatus: Status.IN_PROGRESS } as Order;
+        const mockUpdatedOrder = {
             id: "2", orderId: "1", pickingStatus: Status.COMPLETED, deliveryId: "3", deliveryStatus: Status.PENDING
         } as Order;
         const mockDelivery = { data: { id: "3" } };
 
-        jest.spyOn(repo, 'updateOrder').mockResolvedValue(mockOrder);
+        jest.spyOn(repo, 'getOrder').mockResolvedValue(mockOrder)
+        jest.spyOn(repo, 'updateOrder').mockResolvedValue(mockUpdatedOrder);
         jest.spyOn(axios, 'post').mockResolvedValue(mockDelivery);
 
         const result = await service.updateOrder(orderId, step, status);
