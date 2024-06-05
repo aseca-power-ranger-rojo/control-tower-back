@@ -49,8 +49,7 @@ export class ConflictException extends HttpException {
 }
 
 export function ErrorHandling (error: Error, req: Request, res: Response, next: NextFunction): Response {
-
-  console.log("inside handler")
+  
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     const errorMessageLines = error.message.split('\n');
     const trimmedErrorMessage = [errorMessageLines[0], errorMessageLines[errorMessageLines.length - 1]].join(' ');

@@ -4,6 +4,14 @@ import { CreateOrderDTO, GetOrderDTO } from "../dto";
 export class OrdersRepository {
     constructor(private readonly db: PrismaClient) {}
 
+    async getOrder(orderId: string): Promise<Order|null> {
+        return await this.db.order.findUnique({
+            where: {
+                orderId: orderId
+            }
+        });
+    }
+
     async getOrders(): Promise<GetOrderDTO[]> {
         const orders = await this.db.order.findMany({
             where: {
