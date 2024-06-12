@@ -22,8 +22,8 @@ ordersController.get('/', async(req: Request, res: Response, next) => {
 ordersController.post('/', BodyValidation(CreateOrderDTO),  async(req: Request, res: Response, next) => {
   try {
     const data = req.body;
-    await service.createOrder(data);
-    return res.status(httpStatus.CREATED).json();
+    const order = await service.createOrder(data);
+    return res.status(httpStatus.CREATED).json(order);
   } catch (error) {
     next(error);
   }
